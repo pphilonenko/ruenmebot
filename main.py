@@ -7,7 +7,7 @@ from telegram.ext import Application, ApplicationBuilder, CommandHandler, Messag
 from telegram.constants import ChatAction
 from database import init_db, get_response, add_response
 from my_info import SYSTEM_PROMPT, ERROR_RESPONSES, REACTION_RESPONSES, AI_COMMAND_RESPONSE
-from config import TELEGRAM_TOKEN, FORWARD_CHAT_IDS, WEBHOOK_URL, RESPONSE_DELAY_SECONDS, TYPING_DURATION_SECONDS, ADMIN_CHAT_ID, GLAV_CHAT_ID, DIR_CHAT_ID, STOMCLINICA_CHAT_ID, START_BOT_MESSAGE, NON_ADMIN_MESSAGE, IP_PHONE
+from config import TELEGRAM_TOKEN, FORWARD_CHAT_IDS, WEBHOOK_URL, RESPONSE_DELAY_SECONDS, TYPING_DURATION_SECONDS, ADMIN_CHAT_ID, START_BOT_MESSAGE, NON_ADMIN_MESSAGE, IP_PHONE
 from grok_api import query_grok
 from utils import notify_development
 from aiohttp import web
@@ -27,7 +27,7 @@ TRIGGER_PATTERN = re.compile(
     re.UNICODE
 )
 
-logging.basicConfig(filename='/home/ruenebot/logs/ruenmebot.log', level=logging.INFO,
+logging.basicConfig(filename='/home/ruenmebot/logs/ruenmebot.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 # Глобальная переменная для хранения состояния и данных
 user_data = {}
@@ -39,52 +39,8 @@ async def handle_callback(update, context):
     query = update.callback_query
     await query.answer()  # Подтверждаем обработку
     
-    if query.data == 'amerhanov':
-        text = await stomat.get_amerhanov_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'ahmetshin':
-        text = await stomat.get_ahmetshin_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'begmatov':
-        text = await stomat.get_begmatov_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'belousov':
+    if query.data == 'belousov':
         text = await stomat.get_belousov_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'belosludtseva':
-        text = await stomat.get_belosludtseva_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'gruzunova':
-        text = await stomat.get_gruzunova_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'zamaletdinov':
-        text = await stomat.get_zamaletdinov_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'rulov':
-        text = await stomat.get_rulov_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'tuckmach':
-        text = await stomat.get_tuckmach_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'habib':
-        text = await stomat.get_habib_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'halilova':
-        text = await stomat.get_chirgilaev_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'chirgilaev':
-        text = await stomat.get_chirgilaev_info(app)
         await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
 
     elif query.data == 'simonova':
@@ -150,30 +106,6 @@ async def handle_callback(update, context):
             reply_markup=ForceReply(selective=True)
         )    
         # await query.edit_message_text(f"Вы записаны на {booking_datetime}.", parse_mode='HTML')
-
-    elif query.data == 'gubin1':
-        text = await stomat.get_gubin1_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'isaeva1':
-        text = await stomat.get_isaeva1_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'mironets':
-        text = await stomat.get_mironets_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'mironets1':
-        text = await stomat.get_mironets1_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'isaeva2':
-        text = await stomat.get_isaeva2_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
-
-    elif query.data == 'simonova1':
-        text = await stomat.get_simonova1_info(app)
-        await query.edit_message_text(text=text, reply_markup=query.message.reply_markup, parse_mode='HTML')
 
 async def get_business_response(query, user_info=None, bot=None):
     try:
@@ -271,8 +203,8 @@ async def webhook(request: web.Request):
                 await app.process_update(update)  # Передаём в handle_message
             else:
                 # Проверяем, является ли это нажатием кнопки (только обычные клавиши)
-                if re.search(r'^(📅 Запись|💰 Цены|☎️ Контакты|🏥 Клиника|🧠 ИИ|🗓 Моя запись|♻️)$', update.message.text):
-                    if update.message.text == '🏥 Клиника':
+                if re.search(r'^(📅 Запись|💰 Цены|☎️ Контакты|🏥 Школа|🧠 ИИ|🗓 Моя запись|♻️)$', update.message.text):
+                    if update.message.text == '🏥 Школа':
                         keyboard = [
                             ['📅 Запись', '💰 Цены'],
                             ['☎️ Контакты','🗓 Моя запись'],
@@ -289,7 +221,7 @@ async def webhook(request: web.Request):
                         keyboard = [
                             ['📅 Запись', '💰 Цены'],
                             ['☎️ Контакты','🗓 Моя запись'],
-                            ['🏥 Клиника','♻️']
+                            ['🏥 Школа','♻️']
                         ]
                         reply_markup = ReplyKeyboardMarkup(
                             keyboard=keyboard,
@@ -301,7 +233,7 @@ async def webhook(request: web.Request):
                     elif update.message.text == '♻️':
                         keyboard = [
                             ['📅 Запись', '💰 Цены'],
-                            ['☎️ Контакты', '🏥 Клиника'],
+                            ['☎️ Контакты', '🏥 Школа'],
                             ['🧠 ИИ','🗓 Моя запись']
                         ]
                         reply_markup = ReplyKeyboardMarkup(
@@ -317,39 +249,26 @@ async def webhook(request: web.Request):
                             
                             for row in contacts:
                                 text = f"<b>{row[1]}</b>\n"  # note
-                                text += f"Email: clinica@izdenta.com\n"
-                                text +=f"Лицензия: ЛО-18-01-001496, выдана 19.08.2014г. бессрочно\n"
-                                text +=f"Директор Бушуев Сергей Сергеевич\n"
-                                text += "\nИжевск, Красноармейская, 127\n"
+                                text += f"Email: school@izdenta.com\n"
+                                text +=f"Лицензия: 12345 бессрочно\n"
+                                text +=f"Директор Михеева Екатерина Романовна\n"
+                                text += "\nИжевск, Бородина, 21, оф.417\n"
                                 text += f"как проехать {row[2]}\n"  # adress
                             await app.bot.send_message(chat_id=update.message.chat.id, text=text, parse_mode='HTML')
                         else:
                             await app.bot.send_message(chat_id=update.message.chat.id, text="Ошибка при загрузке контактов. Попробуйте позже.")
                     elif update.message.text == '💰 Цены':
                         text = (
-                            "Задайте свой вопрос в свободной форме (например, «Сколько стоит пломба?»), и я сразу отвечу!\n"
-                            "Полный прайс-лист доступен на нашем официальном сайте:\n🌐 <a href='https://izdenta.com/prices'>izdenta.com/prices</a>"
+                            "Задайте свой вопрос в свободной форме (например, «Сколько стоит занятие?»), и я сразу отвечу!\n"
+                            "Полный прайс-лист доступен на нашем официальном сайте:\n🌐 <a href='https://ruenme.com/pricelist'>ruenme.com/pricelist</a>"
                         )
                         await app.bot.send_message(chat_id=update.message.chat.id, text=text, parse_mode='HTML')
                     elif update.message.text == '📅 Запись':
 
-                        text = f"Выберите лечащего врача"
+                        text = f"Выберите преподавателя"
                         keyboard = [
-                            [InlineKeyboardButton("Амерханов Б.И.", callback_data='amerhanov'),
-                            InlineKeyboardButton("Ахметшин И.М.", callback_data='ahmetshin'),
-                            InlineKeyboardButton("Бегматов И.К.", callback_data='begmatov')],
-
-                            [InlineKeyboardButton("Белоусов К.В.", callback_data='belousov'),
-                            InlineKeyboardButton("Белослудцева С.М.", callback_data='belosludtseva'),
-                            InlineKeyboardButton("Грызунова Т.Л.", callback_data='gruzunova')],
-
-                            [InlineKeyboardButton("Замалетдинов М.Р.", callback_data='zamaletdinov'),
-                            InlineKeyboardButton("Рылов А.С.", callback_data='rulov'),
-                            InlineKeyboardButton("Тукмачева Ю.А.", callback_data='tuckmach')],
-
-                            [InlineKeyboardButton("Хабибуллина Л.Ф.", callback_data='habib'),
-                            InlineKeyboardButton("Халилова Е.А.", callback_data='halilova'),
-                            InlineKeyboardButton("Чиргилаев Р.Р.", callback_data='chirgilaev')]
+                            [InlineKeyboardButton("Михеева Е.Р.", callback_data='belousov'),
+                            InlineKeyboardButton("Михеева Е.Р.", callback_data='simonova')],
                         ]
                         reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -367,7 +286,7 @@ async def webhook(request: web.Request):
                     if re.search(pattern, update.message.text.lower()):
                         handled = await stomat.handle_price_query(update, app, TYPING_DURATION_SECONDS)
                         if not handled:
-                            await app.bot.send_message(chat_id=update.message.chat.id, text="Такую услугу наша клиника не оказывает, приносим извинения.")
+                            await app.bot.send_message(chat_id=update.message.chat.id, text="Такую услугу наша Школа не оказывает, приносим извинения.")
                     else:
                         # response = await get_business_response(update.message.text, user_info={
                         #     'username': update.message.from_user.username,
@@ -412,7 +331,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reply_markup=ReplyKeyboardMarkup(
                     keyboard=[
                         ['📅 Запись', '💰 Цены'],
-                        ['☎️ Контакты', '🏥 Клиника'],
+                        ['☎️ Контакты', '🏥 Школа'],
                         ['🧠 ИИ','🗓 Моя запись']
                     ],
                     resize_keyboard=True,
@@ -445,7 +364,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     reply_markup=ReplyKeyboardMarkup(
                         keyboard=[
                             ['📅 Запись', '💰 Цены'],
-                            ['☎️ Контакты', '🏥 Клиника'],
+                            ['☎️ Контакты', '🏥 Школа'],
                             ['🧠 ИИ','🗓 Моя запись']
                         ],
                         resize_keyboard=True,
@@ -479,7 +398,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     reply_markup=ReplyKeyboardMarkup(
                         keyboard=[
                             ['📅 Запись', '💰 Цены'],
-                            ['☎️ Контакты', '🏥 Клиника'],
+                            ['☎️ Контакты', '🏥 Школа'],
                             ['🧠 ИИ','🗓 Моя запись']
                         ],
                         resize_keyboard=True,
@@ -513,7 +432,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     reply_markup=ReplyKeyboardMarkup(
                         keyboard=[
                             ['📅 Запись', '💰 Цены'],
-                            ['☎️ Контакты', '🏥 Клиника'],
+                            ['☎️ Контакты', '🏥 Школа'],
                             ['🧠 ИИ','🗓 Моя запись']
                         ],
                         resize_keyboard=True,
@@ -539,7 +458,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             logging.info(f"Using mysql_booking_datetime: {mysql_booking_datetime} for user {user_id}")
             keyboard = [
                 ['📅 Запись', '💰 Цены'],
-                ['☎️ Контакты', '🏥 Клиника'],
+                ['☎️ Контакты', '🏥 Школа'],
                 ['🧠 ИИ','🗓 Моя запись']
             ]
             reply_markup = ReplyKeyboardMarkup(
@@ -660,7 +579,7 @@ async def cancel_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=ReplyKeyboardMarkup(
                 keyboard=[
                     ['📅 Запись', '💰 Цены'],
-                    ['☎️ Контакты', '🏥 Клиника'],
+                    ['☎️ Контакты', '🏥 Школа'],
                     ['🧠 ИИ','🗓 Моя запись']
                 ],
                 resize_keyboard=True,
@@ -676,7 +595,7 @@ async def cancel_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=ReplyKeyboardMarkup(
                 keyboard=[
                     ['📅 Запись', '💰 Цены'],
-                    ['☎️ Контакты', '🏥 Клиника'],
+                    ['☎️ Контакты', '🏥 Школа'],
                     ['🧠 ИИ','🗓 Моя запись']
                 ],
                 resize_keyboard=True,
@@ -687,7 +606,7 @@ async def cancel_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # сохраняем запись на прием в базу
 async def add_appoint(full_name, birth_date, phone, note, booking_datetime):
-    url = "https://izdenta.com/appoint/calendar"
+    url = "https://ruenme.com/appoint/calendar"
     payload = {
         "fullname": full_name,
         "dr": birth_date,
