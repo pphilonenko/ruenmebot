@@ -1,0 +1,6 @@
+logs/
+responses.db
+__pycache__/
+*.pyc
+*.log
+config.py
